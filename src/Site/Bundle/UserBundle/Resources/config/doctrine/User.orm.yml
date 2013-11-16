@@ -16,6 +16,14 @@ Site\Bundle\UserBundle\Entity\User:
             type: string
             length: '100'
             column: last_name
+        username:
+            type: string
+            length: '100'
+            column: username
+        password:
+            type: string
+            length: '100'
+            column: password
         isDeleted:
             type: boolean
             column: is_deleted

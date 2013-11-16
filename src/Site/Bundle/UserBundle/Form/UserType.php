@@ -17,12 +17,48 @@ class UserType extends AbstractType
         $builder
             ->add('firstName')
             ->add('lastName')
-            ->add('isDeleted')
-            ->add('isActive')
-            ->add('created')
-            ->add('updated')
-            //->add('userprofile')
+            ->add('username')
+            ->add(
+                'password',
+                'repeated',
+                array(
+                    'type' => 'password',
+                    'invalid_message' => 'The password fields must match.',
+                    'options' => array('attr' => array('class' => 'password-field')),
+                    'required' => true,
+                    'first_options'  => array('label' => 'Password'),
+                    'second_options' => array('label' => 'Repeat Password'),
+                )
+
+            ) 
+            ->add(  'created',
+                    'datetime',
+                    array('required' => false)
+            )
+            ->add(  'updated',
+                    'datetime',
+                    array('required' => false)
+            )
         ;
+
+
+
+        /*
+         *
+         *
+         *
+         * $builder->add(    'password',
+                            'repeated',
+                            array(
+                                    'type' => 'password',
+                                    'invalid_message' => 'The password fields must match.',
+                                    'options' => array('attr' => array('class' => 'password-field')),
+                                    'required' => true,
+                                    'first_options'  => array('label' => 'Password'),
+                                    'second_options' => array('label' => 'Repeat Password'),
+                            )
+        );*/
+
     }
     
     /**

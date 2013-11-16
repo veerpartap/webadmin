@@ -25,6 +25,16 @@ class User
     private $lastName;
 
     /**
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @var string
+     */
+    private $password;
+
+    /**
      * @var boolean
      */
     private $isDeleted;
@@ -181,9 +191,8 @@ class User
      */
     public function setUpdated()
     {
-        if(!isset($this->updated))
+        //if(isset($this->updated))
             $this->updated = new \DateTime();
-
         #$this->updated = $updated;
     
         return $this;
@@ -198,4 +207,39 @@ class User
     {
         return $this->updated;
     }
+
+    /**
+     * @var \Site\Bundle\UserBundle\Entity\UserProfile
+     */
+    private $userprofile;
+
+
+    /**
+     * Set userprofile
+     *
+     * @param \Site\Bundle\UserBundle\Entity\UserProfile $userprofile
+     * @return User
+     */
+    public function setUserprofile(\Site\Bundle\UserBundle\Entity\UserProfile $userprofile = null)
+    {
+        $this->userprofile = $userprofile;
+    
+        return $this;
+    }
+
+    /**
+     * Get userprofile
+     *
+     * @return \Site\Bundle\UserBundle\Entity\UserProfile 
+     */
+    public function getUserprofile()
+    {
+        return $this->userprofile;
+    }
+
+    public function __toString()
+    {
+        return $this->firstName." ".$this->lastName;
+    }
+
 }
