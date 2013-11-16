@@ -181,9 +181,8 @@ class User
      */
     public function setUpdated()
     {
-        if(!isset($this->updated))
+        //if(isset($this->updated))
             $this->updated = new \DateTime();
-
         #$this->updated = $updated;
     
         return $this;
@@ -231,4 +230,5 @@ class User
     {
         return $this->firstName." ".$this->lastName;
     }
+
 }

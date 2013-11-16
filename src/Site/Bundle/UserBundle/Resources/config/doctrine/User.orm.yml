@@ -30,4 +30,5 @@ Site\Bundle\UserBundle\Entity\User:
       userprofile:
         targetEntity: UserProfile
         mappedBy: user
-    lifecycleCallbacks: {  }
+    lifecycleCallbacks: { prePersist: [ setUpdated ] }
+
