@@ -1,0 +1,33 @@
+Site\Bundle\UserBundle\Entity\User:
+    type: entity
+    table: users
+    repositoryClass: Site\Bundle\UserBundle\Entity\UserRepository
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        firstName:
+            type: string
+            length: '100'
+            column: first_name
+        lastName:
+            type: string
+            length: '100'
+            column: last_name
+        isDeleted:
+            type: boolean
+            column: is_deleted
+        isActive:
+            type: boolean
+            column: is_active
+        created:
+            type: datetime
+        updated:
+            type: datetime
+    oneToOne:
+      userprofile:
+        targetEntity: UserProfile
+        mappedBy: user
+    lifecycleCallbacks: {  }

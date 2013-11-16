@@ -1,0 +1,30 @@
+userprofile:
+    pattern:  /
+    defaults: { _controller: "SiteUserBundle:UserProfile:index" }
+
+userprofile_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "SiteUserBundle:UserProfile:show" }
+
+userprofile_new:
+    pattern:  /new
+    defaults: { _controller: "SiteUserBundle:UserProfile:new" }
+
+userprofile_create:
+    pattern:  /create
+    defaults: { _controller: "SiteUserBundle:UserProfile:create" }
+    requirements: { _method: post }
+
+userprofile_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SiteUserBundle:UserProfile:edit" }
+
+userprofile_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SiteUserBundle:UserProfile:update" }
+    requirements: { _method: post|put }
+
+userprofile_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "SiteUserBundle:UserProfile:delete" }
+    requirements: { _method: post|delete }

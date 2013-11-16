@@ -1,0 +1,33 @@
+Site\Bundle\UserBundle\Entity\UserProfile:
+    type: entity
+    table: userprofile
+    repositoryClass: Site\Bundle\UserBundle\Entity\UserProfileRepository
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        mobile:
+            type: string
+            length: '15'
+        phone:
+            type: string
+            length: '15'
+        address:
+            type: text
+        email:
+            type: string
+            length: '100'
+        accountNumber:
+            type: string
+            length: '20'
+            column: account_number
+    oneToOne:
+      user:
+        targetEntity: User
+        inversedBy: userprofile
+        joinColumn:
+          name: user_id
+          referencedColumnName: id
+    lifecycleCallbacks: {  }
