@@ -3,6 +3,12 @@
 {% block body -%}
     <h1>User list</h1>
 
+    {% for flashMessage in app.session.flashbag.get('showindex') %}
+        <div class="flash-notice">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    
     <table class="records_list">
         <thead>
             <tr>

@@ -44,6 +44,7 @@ class UserController extends Controller
             $em->persist($entity);
             $em->flush();
 
+            $this->get('session')->getFlashBag()->add('created', 'New User added successfully!');
             return $this->redirect($this->generateUrl('user_show', array('id' => $entity->getId())));
         }
 
@@ -171,6 +172,7 @@ class UserController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
+            $this->get('session')->getFlashBag()->add('updated', 'User details updated successfully!');
             return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
         }
 
@@ -199,6 +201,8 @@ class UserController extends Controller
 
             $em->remove($entity);
             $em->flush();
+
+            $this->get('session')->getFlashBag()->add('showindex', 'User deleted successfully!');
         }
 
         return $this->redirect($this->generateUrl('user'));

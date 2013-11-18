@@ -3,6 +3,12 @@
 {% block body -%}
     <h1>UserProfile</h1>
 
+    {% for flashMessage in app.session.flashbag.get('created') %}
+        <div class="flash-notice">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
     <table class="record_properties">
         <tbody>
             <tr>

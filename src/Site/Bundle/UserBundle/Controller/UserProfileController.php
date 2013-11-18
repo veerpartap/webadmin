@@ -44,6 +44,7 @@ class UserProfileController extends Controller
             $em->persist($entity);
             $em->flush();
 
+            $this->get('session')->getFlashBag()->add('created', 'User profile created successfully!');
             return $this->redirect($this->generateUrl('userprofile_show', array('id' => $entity->getId())));
         }
 
@@ -171,6 +172,8 @@ class UserProfileController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
+            $this->get('session')->getFlashBag()->add('updated', 'User profile details updated successfully!');
+
             return $this->redirect($this->generateUrl('userprofile_edit', array('id' => $id)));
         }
 
@@ -199,6 +202,7 @@ class UserProfileController extends Controller
 
             $em->remove($entity);
             $em->flush();
+            $this->get('session')->getFlashBag()->add('showindex', 'User profile deleted successfully!');
         }
 
         return $this->redirect($this->generateUrl('userprofile'));

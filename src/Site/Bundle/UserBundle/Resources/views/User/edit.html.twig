@@ -3,6 +3,13 @@
 {% block body -%}
     <h1>User edit</h1>
 
+
+    {% for flashMessage in app.session.flashbag.get('updated') %}
+        <div class="flash-notice">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
     {{ form(edit_form) }}
 
         <ul class="record_actions">
