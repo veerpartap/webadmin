@@ -169,13 +169,36 @@ class UserProfileController extends Controller
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
 
-        if ($editForm->isValid()) {
-            $em->flush();
 
-            $this->get('session')->getFlashBag()->add('updated', 'User profile details updated successfully!');
+        try{
 
-            return $this->redirect($this->generateUrl('userprofile_edit', array('id' => $id)));
+            if ($editForm->isValid()) {
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('updated', 'User profile details updated successfully!');
+                return $this->redirect($this->generateUrl('userprofile_edit', array('id' => $id)));
+            }
+
+        }catch(\Exception $e){
+
+            $errorMsg ="<b>  WARNING >> Updation Error :: </b>";
+            $msg="";
+            switch (get_class($e)) {
+                case 'Doctrine\DBAL\DBALException':
+                    $msg .= get_class($e);
+                    $msg .= $e->getMessage();
+                    echo $errorMsg ."<font size='1'>". $msg ."</font>";
+                    break;
+                case 'Doctrine\DBA\DBAException':
+                    $msg .= get_class($e);
+                    $msg .= $e->getMessage();
+                    echo $errorMsg ."<font size='1'>". $msg ."</font>";
+                    break;
+                default:
+                    throw $e;
+                    break;
+            }
         }
+
 
         return $this->render('SiteUserBundle:UserProfile:edit.html.twig', array(
             'entity'      => $entity,
@@ -189,22 +212,35 @@ class UserProfileController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
+        $errorMsg = $msg= "";
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SiteUserBundle:UserProfile')->find($id);
+        try{
+            $form = $this->createDeleteForm($id);
+            $form->handleRequest($request);
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find UserProfile entity.');
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $entity = $em->getRepository('SiteUserBundle:UserProfile')->find($id);
+
+                if (!$entity) {
+                    throw $this->createNotFoundException('Unable to find UserProfile entity.');
+                }
+
+                $em->remove($entity);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('showindex', 'User profile deleted successfully!');
             }
+            return $this->redirect($this->generateUrl('userprofile'));
 
-            $em->remove($entity);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('showindex', 'User profile deleted successfully!');
+        }catch(\Exception $e) {
+
+            $errorMsg .= "WARNING >> Deletion Error :: ";
+            $msg .= get_class($e). " >> ";
+            $msg .= $e->getMessage();
+            $errorMsg .= $msg;
         }
 
+        $this->get('session')->getFlashBag()->add('showindex', $errorMsg);
         return $this->redirect($this->generateUrl('userprofile'));
     }
 
