@@ -35,17 +35,29 @@ class UserController extends Controller
      */
     public function createAction(Request $request)
     {
+        $errorMsg = $msg= "";
+
         $entity = new User();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        try{
 
-            $this->get('session')->getFlashBag()->add('created', 'New User added successfully!');
-            return $this->redirect($this->generateUrl('user_show', array('id' => $entity->getId())));
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($entity);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('created', 'New User added successfully!');
+                return $this->redirect($this->generateUrl('user_show', array('id' => $entity->getId())));
+            }
+
+        }catch(\Exception $e){
+            $msg="";
+            $errorMsg .= "WARNING >> Updation Error :: ";
+            $msg .= get_class($e). " >> ";
+            $msg .= $e->getMessage();
+            echo $errorMsg .= $msg;
         }
 
         return $this->render('SiteUserBundle:User:new.html.twig', array(
@@ -218,24 +230,40 @@ class UserController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
+        $errorMsg = $msg= "";
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SiteUserBundle:User')->find($id);
+        try{
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find User entity.');
+            $form = $this->createDeleteForm($id);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $entity = $em->getRepository('SiteUserBundle:User')->find($id);
+
+                if (!$entity) {
+                    throw $this->createNotFoundException('Unable to find User entity.');
+                }
+
+                $em->remove($entity);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('showindex', 'User deleted successfully!');
             }
 
-            $em->remove($entity);
-            $em->flush();
+            return $this->redirect($this->generateUrl('user'));
 
-            $this->get('session')->getFlashBag()->add('showindex', 'User deleted successfully!');
+        }catch(\Exception $e) {
+
+            $errorMsg .= "WARNING >> Deletion Error :: ";
+            $msg .= get_class($e). " >> ";
+            $msg .= $e->getMessage();
+            $errorMsg .= $msg;
         }
 
+        $this->get('session')->getFlashBag()->add('showindex', $errorMsg);
         return $this->redirect($this->generateUrl('user'));
+
     }
 
     /**
