@@ -1,0 +1,23 @@
+Site\Bundle\UserBundle\Entity\Region:
+    type: entity
+    table: region
+    fields:
+        regionid:
+            id: true
+            type: integer
+            unsigned: true
+            nullable: false
+            column: regionId
+            generator:
+                strategy: IDENTITY
+        countryid:
+            type: integer
+            unsigned: true
+            nullable: true
+            column: countryId
+        name:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+    lifecycleCallbacks: {  }

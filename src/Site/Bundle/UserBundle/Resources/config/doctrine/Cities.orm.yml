@@ -1,0 +1,28 @@
+Site\Bundle\UserBundle\Entity\Cities:
+    type: entity
+    table: cities
+    fields:
+        cityid:
+            id: true
+            type: integer
+            unsigned: true
+            nullable: false
+            column: cityId
+            generator:
+                strategy: IDENTITY
+        countryid:
+            type: integer
+            unsigned: true
+            nullable: true
+            column: countryId
+        regionid:
+            type: integer
+            unsigned: true
+            nullable: true
+            column: regionId
+        name:
+            type: string
+            length: 100
+            fixed: false
+            nullable: false
+    lifecycleCallbacks: {  }
