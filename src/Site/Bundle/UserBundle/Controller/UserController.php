@@ -115,22 +115,37 @@ class UserController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $errorMsg = $msg= "";
 
+        $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SiteUserBundle:User')->find($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
+        try{
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find User entity.');
+            }
+
+            $editForm = $this->createEditForm($entity);
+            $deleteForm = $this->createDeleteForm($id);
+
+            return $this->render('SiteUserBundle:User:edit.html.twig', array(
+                'entity'      => $entity,
+                'edit_form'   => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            ));
+
+        }catch(\Exception $e){
+            $msg="";
+            $errorMsg .= "WARNING >> Editing Error :: ";
+            $msg .= get_class($e). " >> ";
+            $msg .= $e->getMessage();
+            $errorMsg .= $msg;
         }
 
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $this->get('session')->getFlashBag()->add('showindex', $errorMsg);
+        return $this->redirect($this->generateUrl('user'));
 
-        return $this->render('SiteUserBundle:User:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
     }
 
     /**
@@ -157,30 +172,45 @@ class UserController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $errorMsg = $msg= "";
 
+        $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SiteUserBundle:User')->find($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
+        try{
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find User entity.');
+            }
+
+            $deleteForm = $this->createDeleteForm($id);
+            $editForm = $this->createEditForm($entity);
+            $editForm->handleRequest($request);
+
+            if ($editForm->isValid()) {
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('updated', 'User details updated successfully!');
+                return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+            }
+
+            return $this->render('SiteUserBundle:User:edit.html.twig', array(
+                'entity'      => $entity,
+                'edit_form'   => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            ));
+
+        }catch(\Exception $e){
+            $msg="";
+            $errorMsg .= "WARNING >> Updation Error :: ";
+            $msg .= get_class($e). " >> ";
+            $msg .= $e->getMessage();
+            $errorMsg .= $msg;
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
+        $this->get('session')->getFlashBag()->add('showindex', $errorMsg);
+        return $this->redirect($this->generateUrl('user'));
 
-        if ($editForm->isValid()) {
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add('updated', 'User details updated successfully!');
-            return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
-        }
-
-        return $this->render('SiteUserBundle:User:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
     }
     /**
      * Deletes a User entity.
